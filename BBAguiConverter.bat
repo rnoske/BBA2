@@ -1,0 +1,1 @@
+pyuic4 -x BBAgui.ui -o BBAgui.py

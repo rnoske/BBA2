@@ -1,0 +1,138 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'Settingsui.ui'
+#
+# Created: Wed Nov 14 16:47:24 2012
+#      by: PyQt4 UI code generator 4.9.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    _fromUtf8 = lambda s: s
+
+class Ui_Settings(object):
+    def setupUi(self, Settings):
+        Settings.setObjectName(_fromUtf8("Settings"))
+        Settings.resize(305, 231)
+        self.centralwidget = QtGui.QWidget(Settings)
+        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
+        self.widget = QtGui.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(10, 11, 281, 177))
+        self.widget.setObjectName(_fromUtf8("widget"))
+        self.gridLayout = QtGui.QGridLayout(self.widget)
+        self.gridLayout.setMargin(0)
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        self.Nullhoehe_label = QtGui.QLabel(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.Nullhoehe_label.setFont(font)
+        self.Nullhoehe_label.setObjectName(_fromUtf8("Nullhoehe_label"))
+        self.gridLayout.addWidget(self.Nullhoehe_label, 0, 0, 1, 1)
+        self.Nullhoehe = QtGui.QSpinBox(self.widget)
+        self.Nullhoehe.setMaximum(2000)
+        self.Nullhoehe.setObjectName(_fromUtf8("Nullhoehe"))
+        self.gridLayout.addWidget(self.Nullhoehe, 0, 1, 1, 1)
+        self.Flammenmitte_label = QtGui.QLabel(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.Flammenmitte_label.setFont(font)
+        self.Flammenmitte_label.setObjectName(_fromUtf8("Flammenmitte_label"))
+        self.gridLayout.addWidget(self.Flammenmitte_label, 1, 0, 1, 1)
+        self.Flammenmitte = QtGui.QSpinBox(self.widget)
+        self.Flammenmitte.setMaximum(2000)
+        self.Flammenmitte.setObjectName(_fromUtf8("Flammenmitte"))
+        self.gridLayout.addWidget(self.Flammenmitte, 1, 1, 1, 1)
+        self.GradZwischenBildern_label = QtGui.QLabel(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.GradZwischenBildern_label.setFont(font)
+        self.GradZwischenBildern_label.setObjectName(_fromUtf8("GradZwischenBildern_label"))
+        self.gridLayout.addWidget(self.GradZwischenBildern_label, 2, 0, 1, 1)
+        self.GradZwischenBildern = QtGui.QSpinBox(self.widget)
+        self.GradZwischenBildern.setMaximum(360)
+        self.GradZwischenBildern.setObjectName(_fromUtf8("GradZwischenBildern"))
+        self.gridLayout.addWidget(self.GradZwischenBildern, 2, 1, 1, 1)
+        self.Aufloesung_label = QtGui.QLabel(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.Aufloesung_label.setFont(font)
+        self.Aufloesung_label.setObjectName(_fromUtf8("Aufloesung_label"))
+        self.gridLayout.addWidget(self.Aufloesung_label, 3, 0, 1, 1)
+        self.Aufloesung = QtGui.QDoubleSpinBox(self.widget)
+        self.Aufloesung.setObjectName(_fromUtf8("Aufloesung"))
+        self.gridLayout.addWidget(self.Aufloesung, 3, 1, 1, 1)
+        self.Background_label = QtGui.QLabel(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.Background_label.setFont(font)
+        self.Background_label.setObjectName(_fromUtf8("Background_label"))
+        self.gridLayout.addWidget(self.Background_label, 4, 0, 1, 1)
+        self.ChooseBackground_Button = QtGui.QPushButton(self.widget)
+        self.ChooseBackground_Button.setObjectName(_fromUtf8("ChooseBackground_Button"))
+        self.gridLayout.addWidget(self.ChooseBackground_Button, 4, 1, 1, 1)
+        self.Workspace_label = QtGui.QLabel(self.widget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.Workspace_label.setFont(font)
+        self.Workspace_label.setObjectName(_fromUtf8("Workspace_label"))
+        self.gridLayout.addWidget(self.Workspace_label, 5, 0, 1, 1)
+        self.ChooseWorkspace_Button = QtGui.QPushButton(self.widget)
+        self.ChooseWorkspace_Button.setObjectName(_fromUtf8("ChooseWorkspace_Button"))
+        self.gridLayout.addWidget(self.ChooseWorkspace_Button, 5, 1, 1, 1)
+        self.WorkspaceShow_label = QtGui.QLabel(self.widget)
+        self.WorkspaceShow_label.setObjectName(_fromUtf8("WorkspaceShow_label"))
+        self.gridLayout.addWidget(self.WorkspaceShow_label, 6, 0, 1, 1)
+        Settings.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(Settings)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 305, 21))
+        self.menubar.setObjectName(_fromUtf8("menubar"))
+        self.menuSettings = QtGui.QMenu(self.menubar)
+        self.menuSettings.setObjectName(_fromUtf8("menuSettings"))
+        Settings.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(Settings)
+        self.statusbar.setObjectName(_fromUtf8("statusbar"))
+        Settings.setStatusBar(self.statusbar)
+        self.actionLoad = QtGui.QAction(Settings)
+        self.actionLoad.setObjectName(_fromUtf8("actionLoad"))
+        self.actionSave = QtGui.QAction(Settings)
+        self.actionSave.setObjectName(_fromUtf8("actionSave"))
+        self.menuSettings.addAction(self.actionLoad)
+        self.menuSettings.addAction(self.actionSave)
+        self.menubar.addAction(self.menuSettings.menuAction())
+
+        self.retranslateUi(Settings)
+        QtCore.QObject.connect(self.actionLoad, QtCore.SIGNAL(_fromUtf8("triggered()")), Settings.loadSettings)
+        QtCore.QObject.connect(self.actionSave, QtCore.SIGNAL(_fromUtf8("triggered()")), Settings.saveSettings)
+        QtCore.QObject.connect(self.ChooseWorkspace_Button, QtCore.SIGNAL(_fromUtf8("clicked()")), Settings.chooseWorkspace)
+        QtCore.QObject.connect(self.ChooseBackground_Button, QtCore.SIGNAL(_fromUtf8("clicked()")), Settings.chooseBackground)
+        QtCore.QMetaObject.connectSlotsByName(Settings)
+
+    def retranslateUi(self, Settings):
+        Settings.setWindowTitle(QtGui.QApplication.translate("Settings", "Settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.Nullhoehe_label.setText(QtGui.QApplication.translate("Settings", "Nullhoehe", None, QtGui.QApplication.UnicodeUTF8))
+        self.Flammenmitte_label.setText(QtGui.QApplication.translate("Settings", "Flammenmitte", None, QtGui.QApplication.UnicodeUTF8))
+        self.GradZwischenBildern_label.setText(QtGui.QApplication.translate("Settings", "Grad zwischen Bildern", None, QtGui.QApplication.UnicodeUTF8))
+        self.Aufloesung_label.setText(QtGui.QApplication.translate("Settings", "Aufloesung", None, QtGui.QApplication.UnicodeUTF8))
+        self.Background_label.setText(QtGui.QApplication.translate("Settings", "Backgroundfile", None, QtGui.QApplication.UnicodeUTF8))
+        self.ChooseBackground_Button.setText(QtGui.QApplication.translate("Settings", "Choose Backgroundfile", None, QtGui.QApplication.UnicodeUTF8))
+        self.Workspace_label.setText(QtGui.QApplication.translate("Settings", "Workspace", None, QtGui.QApplication.UnicodeUTF8))
+        self.ChooseWorkspace_Button.setText(QtGui.QApplication.translate("Settings", "Choose Workspace", None, QtGui.QApplication.UnicodeUTF8))
+        self.WorkspaceShow_label.setText(QtGui.QApplication.translate("Settings", "Current Workspace", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuSettings.setTitle(QtGui.QApplication.translate("Settings", "Settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionLoad.setText(QtGui.QApplication.translate("Settings", "Load", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSave.setText(QtGui.QApplication.translate("Settings", "Save", None, QtGui.QApplication.UnicodeUTF8))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    Settings = QtGui.QMainWindow()
+    ui = Ui_Settings()
+    ui.setupUi(Settings)
+    Settings.show()
+    sys.exit(app.exec_())
+

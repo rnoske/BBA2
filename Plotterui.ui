@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Plotterui</class>
+ <widget class="QWidget" name="Plotterui">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>687</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Plotter</string>
+  </property>
+  <widget class="MplWidget" name="MPLArea" native="true">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>651</width>
+     <height>561</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="Plot_comboBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="maxVisibleItems">
+    <number>100</number>
+   </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MplWidget</class>
+   <extends>QWidget</extends>
+   <header>mplwidget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>Plot_comboBox</sender>
+   <signal>activated(int)</signal>
+   <receiver>Plotterui</receiver>
+   <slot>myPlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>26</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>48</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>test_plotter()</slot>
+  <slot>myPlot()</slot>
+ </slots>
+</ui>
