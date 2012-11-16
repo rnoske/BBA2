@@ -14,7 +14,7 @@
    <string>Settings</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -221,22 +221,6 @@
     <hint type="destinationlabel">
      <x>284</x>
      <y>166</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ChooseBackground_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>Settings</receiver>
-   <slot>chooseBackground()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>259</x>
-     <y>148</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>263</x>
-     <y>98</y>
     </hint>
    </hints>
   </connection>

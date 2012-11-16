@@ -16,6 +16,8 @@ import BBAgui #from BBAgui import Ui_BBA
 import Settingsui #from Settingsui import Ui_Settings
 import Plotterui
 
+import ph
+
 class Bba(QtGui.QMainWindow):
     """ Gui handler class
     
@@ -29,33 +31,41 @@ class Bba(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.show()
         
-        #self.bba = BBA()
+        self.ph = ph.Ph()
     
     #open image call answear
     def openImages(self):
         """ Responds to dialog to open images
         
         """
+        #get settings
+        _setDict = self.ph.get_settings(section='FlameParameters') #gets dict
+        
         _msg = 'Select one or more images to open'
-        _prepath = 'D:/Raimund Buero/Python/testbilder'
+        try:
+            _prepath = _setDict['openimagepath']
+        except (KeyError):
+            _prepath = 'D:/Raimund Buero/Python/testbilder'
+            
         _Imagetypes = 'Images (*.bmp *.png *.jpg *.fit *.fits)'
         filepaths = QtGui.QFileDialog.getOpenFileNames(self, 
                                                       _msg,
                                                       _prepath, 
                                                       _Imagetypes)
+        #delete old image list
+        self.ph.del_image_dict()
+        #add new images to dict
         for filepath in filepaths:
-            self.bba.add_image_bd(str(filepath))
-        _nL = self.bba.get_imageName_list()
+            self.ph.add_image_bd(str(filepath))
+        _nL = self.ph.get_imageName_list()
+        #Gui handling
+        self.ui.ImageList.clear()
         for name in _nL:
             _fp = QtGui.QListWidgetItem(name, self.ui.ImageList)
             self.ui.ImageList.addItem(_fp)
             
         #Set Image settings
-        try:
-            self.setImageSettings()
-        except:
-            logging.error('Fehler beim schreiben der Settings beim \
-            oeffnen der Datei')
+        self.setImageSettings()
         
     #Settings function
     def openSettings(self, parent = None):
@@ -122,7 +132,8 @@ class Bba(QtGui.QMainWindow):
         """ Send Settings to each Bild instance
         
         """
-        self.bba.setImageSettings()
+        _setDict = self.ph.get_settings(section='FlameParameters')
+        self.ph.setImageSettings(_setDict)
         
     def chooseWorkspace(self):
         """ File Dialog to choose current workspace
@@ -131,6 +142,26 @@ class Bba(QtGui.QMainWindow):
         #_file = QtGui.QFileDialog.getOpenFileName(self, _msg, _prepath, _type)
         _dir = QtGui.QFileDialog.getExistingDirectory(self, "Select Directory")
         self.sui.WorkspaceShow_label.setText(_dir)
+        
+    #Calculate stuff
+    def calculateStuff(self):
+        """ Answears calculate stuff call
+        
+        """
+        if self.ui.cB_totalIntensity.checkState() == 2:
+            self.ph.calc_totalInt()
+        if self.ui.cB_flameHeight.checkState() ==2:
+            self.ph.calc_flameHeight()
+        if self.ui.cB_flameArea.checkState() == 2:
+            self.ph.calc_flameArea()
+        if self.ui.cB_flameAreaCounting.checkState() == 2:
+            self.ph.calc_flameAreaCounting()
+            
+    def saveResults(self):
+        """ Answears save results call
+        
+        """
+        self.ph.save_ResultData()
             
     #Plotter functions
     def openPlotter(self):
@@ -141,6 +172,49 @@ class Bba(QtGui.QMainWindow):
         self.pui = Plotterui.Ui_Plotterui()
         self.pui.setupUi(self)
         self.show()
+        
+        #call myPlot to display something
+        self.myPlot()
+        
+    def myPlot(self):
+        """ Responds to event from Plot_button from Plotter.ui
+        
+        """
+        #add possible data to plot
+        _pD = self.ph.data
+        #shortcut to comboBox
+        _cB = self.pui.Plot_comboBox
+        
+        _seen = []
+        for i in range(_cB.count()):
+            _cB_c = _cB.itemData(i, 0).toString()
+            _cB_c = str(_cB_c) #convert pyqt string to normal string
+            if _cB_c not in _seen:
+                _seen.append(_cB_c)
+
+        for key in _pD.keys():
+            if key not in _seen:
+                _val = QtCore.QVariant(key) #convert to QVariant
+                #_cB.setItemData(i, _val, 0)
+                _cB.addItem(key, _val)
+        
+        #current item index
+        _cB_index = _cB.currentIndex() 
+        #get Variant Object as pyqt string object
+        _cB_c = _cB.itemData(_cB_index, 0).toString()
+        _cB_c = str(_cB_c) #convert pyqt string to normal string
+        
+        if len(_pD) != 0:
+            data = _pD[_cB_c]
+            if data.shape[1] == 2:
+                _x = data[:, 0]
+                _y = data[:, 1]
+                self.pui.MPLArea.qmc.updatePlot(_x,_y)
+            elif data.shape[1] == 3:
+                _x = data[:, 0]
+                _y = data[:, 1]
+                _y2 = data[:, 2]
+                self.pui.MPLArea.qmc.updatePlot_2y(_x,_y, _y2)
         
         
         

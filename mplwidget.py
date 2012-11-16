@@ -52,7 +52,7 @@ class Qt4MplCanvas(FigureCanvas):
         self.x = x
         self.y = y
         #self.fig.canvas.draw()
-        self.axes.plot(self.x, self.y)
+        self.axes.plot(self.x, self.y, 'bo')
         mpl.axes.Axes.relim(self.axes)
         self.fig.canvas.draw()
         
@@ -69,7 +69,7 @@ class Qt4MplCanvas(FigureCanvas):
         self.y = y
         self.y2 = y2
         #self.fig.canvas.draw()
-        self.axes.plot(self.x, self.y, self.x, self.y2)
+        self.axes.plot(self.x, self.y, 'bo', self.x, self.y2, 'r+')
         mpl.axes.Axes.relim(self.axes)
         self.fig.canvas.draw()
         
