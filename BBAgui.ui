@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>545</width>
-    <height>447</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,15 +28,15 @@
       <widget class="QListWidget" name="ImageList"/>
      </item>
      <item>
-      <widget class="QPushButton" name="OpenImages">
+      <widget class="QPushButton" name="Add_Experiment">
        <property name="text">
-        <string>Open Images</string>
+        <string>Add new Experiment</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -184,22 +184,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>OpenImages</sender>
-   <signal>clicked()</signal>
-   <receiver>BBA</receiver>
-   <slot>openImages()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>38</x>
-     <y>416</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>78</x>
-     <y>378</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionOpen_Settings</sender>
    <signal>triggered()</signal>
    <receiver>BBA</receiver>
@@ -238,8 +222,8 @@
    <slot>calculateStuff()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>393</x>
-     <y>145</y>
+     <x>394</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>393</x>
@@ -254,12 +238,28 @@
    <slot>saveResults()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>359</x>
-     <y>182</y>
+     <x>360</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>359</x>
      <y>213</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Add_Experiment</sender>
+   <signal>clicked()</signal>
+   <receiver>BBA</receiver>
+   <slot>add_new_experiment()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>423</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>313</x>
+     <y>422</y>
     </hint>
    </hints>
   </connection>
@@ -273,5 +273,6 @@
   <slot>openPlotter()</slot>
   <slot>calculateStuff()</slot>
   <slot>saveResults()</slot>
+  <slot>add_new_experiment()</slot>
  </slots>
 </ui>

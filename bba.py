@@ -33,6 +33,28 @@ class Bba(QtGui.QMainWindow):
         
         self.ph = ph.Ph()
     
+    #add experiment call answear
+    def add_new_experiment(self):
+        """ Add a new experiment to program
+        
+        """
+        #get settings
+        _setDict = self.ph.get_settings(section='FlameParameters') #gets dict
+        #get path from ui
+        _msg = 'Select experiment folder'
+        try:
+            _prepath = _setDict['openimagepath']
+        except (KeyError):
+            _prepath = 'D:/Raimund Auswertung/Daten'
+            
+        #_Imagetypes = 'Images (*.bmp *.png *.jpg *.fit *.fits)'
+        filepath = QtGui.QFileDialog.getExistingDirectory(self, 
+                                                      _msg,
+                                                      _prepath)
+        
+        #add new experiment
+        self.ph.add_new_experiment(filepath)
+        
     #open image call answear
     def openImages(self):
         """ Responds to dialog to open images
