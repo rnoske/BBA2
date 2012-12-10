@@ -139,11 +139,13 @@ class Bild:
                 #plt.imshow(self.image)
                 #plt.show()
                 #save image
+                """
                 _fp = self.sdict['workspace']+'/originalImage/'
                 if not os.path.exists(_fp):
                     os.makedirs(_fp)
                 _fp += str(self.att['basisname']) +'.jpg'
                 plt.imsave(_fp, self.image, origin = 'lower')
+                """
                 return self.image
         else:
             logging.error('Dateiendung konnte nicht geoeffnet werden')
@@ -162,6 +164,18 @@ class Bild:
         _arr = self.open_image()
         #_arr = _arr[0,:,:]
         return _arr
+        
+    def convert_to_jpg(self):
+        """ Convert and save the image as jpg
+        
+        """
+        _arr = self.open_image()
+        _fp = self.sdict['workspace']+'/jpg/'
+        if not os.path.exists(_fp):
+                    os.makedirs(_fp)
+        _fp += str(self.att['basisname']) +'.jpg'
+        import scipy.misc
+        scipy.misc.imsave(_fp, _arr)
         
     def calc_totalInt(self):
         """ Calculate total Pixel count of image

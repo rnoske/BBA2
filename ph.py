@@ -95,6 +95,16 @@ class Ph():
                 _fpp = _fp + '.jpg'
                 plt.savefig(_fpp)
                 
+   
+    def convert_jpg(self):
+        """ convert every image to jpg and save it
+        
+        """
+        print 'Convertiere Bilder zu jpgs'
+        for bild in self.bd.itervalues():
+            bild.convert_to_jpg()
+        print 'Convertierung abgeschlossen!'
+        
         
     def calc_totalInt(self):
         """ Calculate total Intensity for every image

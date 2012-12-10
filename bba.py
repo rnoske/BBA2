@@ -148,6 +148,8 @@ class Bba(QtGui.QMainWindow):
         """ Answears calculate stuff call
         
         """
+        if self.ui.cB_convertjpg.checkState() == 2:
+            self.ph.convert_jpg()
         if self.ui.cB_totalIntensity.checkState() == 2:
             self.ph.calc_totalInt()
         if self.ui.cB_flameHeight.checkState() ==2:

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'BBAgui.ui'
 #
-# Created: Fri Nov 16 13:59:27 2012
+# Created: Tue Dec 04 18:17:24 2012
 #      by: PyQt4 UI code generator 4.9.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,11 +32,8 @@ class Ui_BBA(object):
         self.OpenImages = QtGui.QPushButton(self.layoutWidget)
         self.OpenImages.setObjectName(_fromUtf8("OpenImages"))
         self.verticalLayout.addWidget(self.OpenImages)
-        self.saveResults = QtGui.QPushButton(self.centralwidget)
-        self.saveResults.setGeometry(QtCore.QRect(310, 150, 121, 23))
-        self.saveResults.setObjectName(_fromUtf8("saveResults"))
         self.widget = QtGui.QWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(310, 11, 122, 136))
+        self.widget.setGeometry(QtCore.QRect(310, 12, 122, 188))
         self.widget.setObjectName(_fromUtf8("widget"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.widget)
         self.verticalLayout_2.setMargin(0)
@@ -44,6 +41,14 @@ class Ui_BBA(object):
         self.label = QtGui.QLabel(self.widget)
         self.label.setObjectName(_fromUtf8("label"))
         self.verticalLayout_2.addWidget(self.label)
+        self.cB_convertjpg = QtGui.QCheckBox(self.widget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.cB_convertjpg.sizePolicy().hasHeightForWidth())
+        self.cB_convertjpg.setSizePolicy(sizePolicy)
+        self.cB_convertjpg.setObjectName(_fromUtf8("cB_convertjpg"))
+        self.verticalLayout_2.addWidget(self.cB_convertjpg)
         self.cB_totalIntensity = QtGui.QCheckBox(self.widget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -64,6 +69,9 @@ class Ui_BBA(object):
         self.pB_Calculate = QtGui.QPushButton(self.widget)
         self.pB_Calculate.setObjectName(_fromUtf8("pB_Calculate"))
         self.verticalLayout_2.addWidget(self.pB_Calculate)
+        self.saveResults = QtGui.QPushButton(self.widget)
+        self.saveResults.setObjectName(_fromUtf8("saveResults"))
+        self.verticalLayout_2.addWidget(self.saveResults)
         BBA.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(BBA)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 545, 21))
@@ -103,13 +111,14 @@ class Ui_BBA(object):
     def retranslateUi(self, BBA):
         BBA.setWindowTitle(QtGui.QApplication.translate("BBA", "BBA", None, QtGui.QApplication.UnicodeUTF8))
         self.OpenImages.setText(QtGui.QApplication.translate("BBA", "Open Images", None, QtGui.QApplication.UnicodeUTF8))
-        self.saveResults.setText(QtGui.QApplication.translate("BBA", "Save Results", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("BBA", "Calculate:", None, QtGui.QApplication.UnicodeUTF8))
+        self.cB_convertjpg.setText(QtGui.QApplication.translate("BBA", "convert to jpg", None, QtGui.QApplication.UnicodeUTF8))
         self.cB_totalIntensity.setText(QtGui.QApplication.translate("BBA", "total Intensity", None, QtGui.QApplication.UnicodeUTF8))
         self.cB_flameHeight.setText(QtGui.QApplication.translate("BBA", "Flame height", None, QtGui.QApplication.UnicodeUTF8))
         self.cB_flameArea.setText(QtGui.QApplication.translate("BBA", "Flame area", None, QtGui.QApplication.UnicodeUTF8))
         self.cB_flameAreaCounting.setText(QtGui.QApplication.translate("BBA", "Flame area counting", None, QtGui.QApplication.UnicodeUTF8))
         self.pB_Calculate.setText(QtGui.QApplication.translate("BBA", "Calculate!", None, QtGui.QApplication.UnicodeUTF8))
+        self.saveResults.setText(QtGui.QApplication.translate("BBA", "Save Results", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMein_test.setTitle(QtGui.QApplication.translate("BBA", "Menu", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen_Images.setText(QtGui.QApplication.translate("BBA", "Open Images", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen_Image_directory.setText(QtGui.QApplication.translate("BBA", "Open Image directory", None, QtGui.QApplication.UnicodeUTF8))
