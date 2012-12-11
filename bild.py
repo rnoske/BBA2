@@ -81,6 +81,9 @@ class Bild:
         self.rnio = rnio.RnIo()
         self.fitter = fitter.Fitter()
         
+        if 'sdict' in kwargs.keys():
+            self.sdict = kwargs['sdict']
+        
         #checks if pfad is valid
         if os.path.exists(pfad) == True:
             self.pfad = str(pfad)
@@ -92,6 +95,8 @@ class Bild:
         else:
             logging.warning('No file found under pfad %s. No image was opened',
                             pfad)
+                            
+        
                             
         #setze/finde Dateiendung
         _end = self.pfad.split('.')
@@ -118,6 +123,12 @@ class Bild:
             _bn+=entry+'.'
         _bn = _bn.rstrip('.')
         self.att['basisname'] = _bn
+        _tmp = _bn.split('_')
+        _tmp = _tmp.pop()
+        try:
+            self.att['phase'] = float(_tmp) * float(self.sdict['gradprobild'])
+        except (TypeError):
+            print 'Phase im Dateinamen nicht erkannt!'
         
     def open_image(self):
         """ Opens and returns an PIL image

@@ -150,6 +150,7 @@ class RnIo():
         _arr = _fits[number].data
         _arr = _arr[0,:,:] #da nur 2D Array
         return _arr, _header
+        
 
 
 if __name__ == "__main__":

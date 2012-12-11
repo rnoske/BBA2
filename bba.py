@@ -32,6 +32,8 @@ class Bba(QtGui.QMainWindow):
         self.show()
         
         self.ph = ph.Ph()
+        self.read_sfbXMLfile()
+        
     
     #add experiment call answear
     def add_new_experiment(self):
@@ -43,17 +45,25 @@ class Bba(QtGui.QMainWindow):
         #get path from ui
         _msg = 'Select experiment folder'
         try:
-            _prepath = _setDict['openimagepath']
+            _prepath = _setDict['openexperimentpath']
         except (KeyError):
-            _prepath = 'D:/Raimund Auswertung/Daten'
+            _prepath = 'D:/Raimund Auswertung/Daten/Stephan'
             
         #_Imagetypes = 'Images (*.bmp *.png *.jpg *.fit *.fits)'
         filepath = QtGui.QFileDialog.getExistingDirectory(self, 
                                                       _msg,
                                                       _prepath)
-        
+        filepath = str(filepath)
+
         #add new experiment
         self.ph.add_new_experiment(filepath)
+        
+        #Gui handling
+        self.ui.ImageList.clear()
+        for _exp in self.ph.exp.itervalues():
+            _fp = QtGui.QListWidgetItem(str(_exp.att['name']), self.ui.ImageList)
+            self.ui.ImageList.addItem(_fp)
+            
         
     #open image call answear
     def openImages(self):
@@ -88,6 +98,24 @@ class Bba(QtGui.QMainWindow):
             
         #Set Image settings
         self.setImageSettings()
+        
+    def write_toXMLfile(self):
+        """ Responds to gui call
+        
+        """
+        self.ph.write_toXMLfile()
+        
+    def read_sfbXMLfile(self):
+        """ Read the sfb xml file and populate gui
+        
+        """
+        #read sfb xml file at startup
+        self.ph.read_sfbxmlfile()
+        #Gui handling
+        self.ui.ImageList.clear()
+        for _exp in self.ph.exp.itervalues():
+            _fp = QtGui.QListWidgetItem(str(_exp.att['name']), self.ui.ImageList)
+            self.ui.ImageList.addItem(_fp)
         
     #Settings function
     def openSettings(self, parent = None):

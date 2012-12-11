@@ -17,28 +17,6 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>1</y>
-      <width>281</width>
-      <height>411</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QListWidget" name="ImageList"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="Add_Experiment">
-       <property name="text">
-        <string>Add new Experiment</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
       <x>310</x>
       <y>12</y>
       <width>122</width>
@@ -111,6 +89,35 @@
       <widget class="QPushButton" name="saveResults">
        <property name="text">
         <string>Save Results</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>2</y>
+      <width>258</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QListWidget" name="ImageList"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Add_Experiment">
+       <property name="text">
+        <string>Add new Experiment</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Write_toXMLfile">
+       <property name="text">
+        <string>Write to xml file</string>
        </property>
       </widget>
      </item>
@@ -255,11 +262,27 @@
    <hints>
     <hint type="sourcelabel">
      <x>90</x>
-     <y>423</y>
+     <y>383</y>
     </hint>
     <hint type="destinationlabel">
      <x>313</x>
      <y>422</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Write_toXMLfile</sender>
+   <signal>clicked()</signal>
+   <receiver>BBA</receiver>
+   <slot>write_toXMLfile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>232</x>
+     <y>401</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>398</y>
     </hint>
    </hints>
   </connection>
@@ -274,5 +297,6 @@
   <slot>calculateStuff()</slot>
   <slot>saveResults()</slot>
   <slot>add_new_experiment()</slot>
+  <slot>write_toXMLfile()</slot>
  </slots>
 </ui>

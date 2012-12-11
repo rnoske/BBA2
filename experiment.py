@@ -17,18 +17,22 @@ class Experiment():
     """ Experiment class
     
     """
-    def __init__(self, path, ident):
+    def __init__(self, path, ident, **kwargs):
         """ Initialisation
         
         path (str): path(folder) to experiment
         ident (int): identification number for each experiment
         
         """
+        if 'sdict' in kwargs.keys():
+            self.sdict = kwargs['sdict']
         #Experiment attributes
         self.att = OrderedDict()
         self.att['tag'] = 'Experiment'
-        self.att['path'] = path
-        self.att['id'] = ident
+        self.att['path'] = str(path)
+        self.att['id'] = str(ident)
+        self.att['name'] = str(self._calc_name())
+        self.att['description'] = 'single experiment'
         
         #Experiment parameters
         self.parameters = {}
@@ -40,6 +44,15 @@ class Experiment():
         
         #populate experiment
         self.populate_experiment()
+        
+    def _calc_name(self):
+        """ Extract name out of file path
+        
+        """
+        _path = self.att['path']
+        namen = str(_path).split(os.sep)
+        name = namen.pop()
+        return name
         
     def add_parameter(self, name, value):
         """ Add parameter to parameter dictionary
@@ -54,18 +67,29 @@ class Experiment():
         """ Populate automatically the experiment
         
         """
-        curdir = os.curdir()
-        print curdir
+        curdir = self.att['path'] #os.getcwd()
         folder = curdir + '/fits'
-        self._get_image_list(folder)
+        _fitfiles = self._get_image_list(folder)
+        for _fitfile in _fitfiles:
+            _fp = folder + '/' + _fitfile
+            self.add_image_bd(_fp)
         
     def _get_image_list(self, folder):
         #get all files in folder
-        
+        _items = os.listdir(folder)        
         #check if files are fit files
+        _fitfiles = []
+        for item in _items:
+            _end = item.split('.')
+            _end = _end.pop()
+            _endungen = ['fits']
+            if _end in _endungen:
+                _fitfiles.append(item)
+            else:
+                print 'Dateiendung nicht .fit!'
         
         #return list with fit files
-        pass
+        return _fitfiles
         
         
     def add_image_bd(self, filepath):
@@ -74,7 +98,7 @@ class Experiment():
         filepath (str): complete filepath to image
         
         """
-        _Bild = bild.Bild(filepath)
+        _Bild = bild.Bild(filepath, sdict=self.sdict)
         _name = _Bild.att['name']
         self.bd[_name] = _Bild
         
