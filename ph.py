@@ -64,10 +64,10 @@ class Ph():
         
         """
         if oldident == None:
-            _exp= experiment.Experiment(path, self.ident, sdict = self.sdict)
+            _exp= experiment.Experiment(path, self.ident)
             self.exp[str(self.ident)] = _exp
         else:
-            _exp= experiment.Experiment(path, oldident, sdict = self.sdict)
+            _exp= experiment.Experiment(path, oldident)
             self.exp[str(self.ident)] = _exp
             
             
@@ -78,14 +78,8 @@ class Ph():
                 self.ident = oldident
             else:
                 self.ident += 1
-                
-            
+        print 'anzahl experimente: ' + str(len(self.exp))
         
-    def _startup_experiments(self):
-        """ Loads experiments from standard location
-        
-        """
-        sfbxml = 'D:/Raimund Auswertung/Stephan/sfb.xml'
         
     def write_toXMLfile(self):
         """ Write all experiments to sfb xml file
@@ -114,9 +108,11 @@ class Ph():
             #add parameteres
             #TODO add parameteres as necessary
             _param_el = et.Element('Parameters')
-            for key, value in _exp.parameters.iteritems():
+            for key, param in _exp.parameters.iteritems():
                 _input_el = et.Element('Input')
-                _input_el.attrib[key] = value
+                _input_el.attrib['name'] = param['name']
+                _input_el.attrib['unit'] = param['unit']
+                _input_el.text = param['value']
                 _param_el.append(_input_el)
             _exp_el.append(_param_el)
             #add Measurements
@@ -124,10 +120,14 @@ class Ph():
                 _measure_el = et.Element('Measurement')
                 _measure_el.attrib['name'] = bild.att['name']
                 _measure_el.attrib['phase'] = str(bild.att['phase'])
+                for key, value in bild.att.iteritems():
+                    _output_el = et.Element('Output')
+                    _output_el.attrib[key] = key
+                    _output_el.attrib['unit'] = str(None)
+                    _output_el.text = str(value)
+                    _measure_el.append(_output_el)
                 _exp_el.append(_measure_el)
                 
-            
-            
             #add experiment to series
             series.append(_exp_el)
             
@@ -141,7 +141,13 @@ class Ph():
         """
         sfbxml = self.sdict['sfbxml']
         #open elementtree
-        tree = et.parse(sfbxml)
+        try:
+            tree = et.parse(sfbxml)
+        except:
+            #return "empty" xml file
+            series = et.Element('Series')
+            tree = et.ElementTree(series)
+            
         series = tree.getroot()
         for _exp_el in series.findall('Experiment'):
             print _exp_el, _exp_el.tag, _exp_el.attrib
@@ -149,12 +155,14 @@ class Ph():
             _id = _exp_el.attrib['id']
             self.add_new_experiment(str(_path), int(_id))
             #adding parameters to experiment
+            """
             for _para_el in _exp_el.findall('Parameters'):
                 for _input_el in _para_el.findall('Input'):
-                    for key, value in _input_el.attrib.iteritems():
-                        self.exp[str(_id)].parameters[key] = value
-                
-            
+                    _n = _input_el.attrib['name']
+                    _u = _input_el.attrib['unit']
+                    _v = _input_el.text
+                    self.exp[str(_id)].add_parameter(_n, _v, _u)
+                    """
         
         
     def convert_jpg(self):
@@ -186,6 +194,14 @@ class Ph():
                 pass
             else:
                 exp.calc_flameHeight(nGauss)
+                
+    def save_ResultData(self):
+        """ Save results to text file
+        
+        """
+        for exp in self.exp.itervalues():
+            exp.save_ResultData()
+        
         
 if __name__ == "__main__":
     ph = Ph()

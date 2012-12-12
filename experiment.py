@@ -24,8 +24,6 @@ class Experiment():
         ident (int): identification number for each experiment
         
         """
-        if 'sdict' in kwargs.keys():
-            self.sdict = kwargs['sdict']
         #Experiment attributes
         self.att = OrderedDict()
         self.att['tag'] = 'Experiment'
@@ -36,6 +34,7 @@ class Experiment():
         
         #Experiment parameters
         self.parameters = {}
+        self._read_parameters()
         
         #Image dictionary
         self.bd = OrderedDict()
@@ -54,14 +53,37 @@ class Experiment():
         name = namen.pop()
         return name
         
-    def add_parameter(self, name, value):
+    def add_parameter(self, name, value, unit=None):
         """ Add parameter to parameter dictionary
         
         name (str): key
         value (any): value
+        unit (str): unit corresponding to value
         
         """
-        self.parameters[name] = value
+        _param = {}
+        _param['name'] = name
+        _param['value'] = value
+        _param['unit'] = unit
+        #print _param
+        self.parameters[_param['name']] = _param
+        
+    def _read_parameters(self):
+        """ Read parameters from Paramter.cfg file
+        
+        """
+        #read parameter file
+        _fp = self.att['path'] + '/' + 'Parameter.cfg'
+        with open(_fp) as f:
+            content = f.readlines()
+        #analyse content and add parameters
+        _nparams = ((len(content)+1)/4)
+        for i in xrange(_nparams):
+            _n = content[i*4].rstrip('\n')
+            _u = content[i*4+1].rstrip('\n')
+            _v = content[i*4+2].rstrip('\n')
+            self.add_parameter(_n, _v, _u)
+                
         
     def populate_experiment(self):
         """ Populate automatically the experiment
@@ -98,7 +120,16 @@ class Experiment():
         filepath (str): complete filepath to image
         
         """
-        _Bild = bild.Bild(filepath, sdict=self.sdict)
+        _Bild = bild.Bild(filepath)
+        #set necessary parameter for image
+        _Bild.zero =self.parameters['Zero']['value']
+        _Bild.resolution =self.parameters['Resolution']['value']
+        _Bild.flame_center =self.parameters['Flame center']['value']
+        _Bild.workspace =self.att['path']
+        _Bild.degree_image =self.parameters['Degree per image']['value']
+        
+        _Bild.startup()
+        
         _name = _Bild.att['name']
         self.bd[_name] = _Bild
         
@@ -128,7 +159,7 @@ class Experiment():
         """ Save all acquired Data
         
         """
-        _fp = self.sdict['workspace']+'/Calculated Data/'
+        _fp = self.att['path']+'/Calculated Data/'
         if not os.path.exists(_fp):
             os.makedirs(_fp)
         if len(self.data) != 0:

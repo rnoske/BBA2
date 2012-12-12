@@ -80,23 +80,19 @@ class Bild:
         self.att = {} #attribute directory
         self.rnio = rnio.RnIo()
         self.fitter = fitter.Fitter()
-        
-        if 'sdict' in kwargs.keys():
-            self.sdict = kwargs['sdict']
-        
         #checks if pfad is valid
         if os.path.exists(pfad) == True:
             self.pfad = str(pfad)
             logging.info('Image pfad was set: %s', pfad)
-            self.calc_name()
-            with Bild.lock:
-                self.att['bid'] = Bild.bid_count
-                Bild.bid_count += 1
-        else:
-            logging.warning('No file found under pfad %s. No image was opened',
-                            pfad)
-                            
         
+    def startup(self):
+        """ Startup of bild instance. should be used at creation of bild
+        
+        """
+        self.calc_name()
+        with Bild.lock:
+            self.att['bid'] = Bild.bid_count
+            Bild.bid_count += 1
                             
         #setze/finde Dateiendung
         _end = self.pfad.split('.')
@@ -112,21 +108,16 @@ class Bild:
         """ Set a name for the image.
         
         """
-        namen = str(self.pfad).split(os.sep)
+        pfad = self.pfad.replace('/','\\')
+        namen = str(pfad).split(os.sep)
         name = namen.pop()
         self.att['name']=name
-        
-        name = name.split('.')
-        name.pop() #entfernt dateiendung
-        _bn = ''
-        for entry in name:
-            _bn+=entry+'.'
-        _bn = _bn.rstrip('.')
+        _bn = name.rstrip('.fits')
         self.att['basisname'] = _bn
         _tmp = _bn.split('_')
         _tmp = _tmp.pop()
         try:
-            self.att['phase'] = float(_tmp) * float(self.sdict['gradprobild'])
+            self.att['phase'] = float(_tmp) * float(self.degree_image)
         except (TypeError):
             print 'Phase im Dateinamen nicht erkannt!'
         
@@ -181,7 +172,7 @@ class Bild:
         
         """
         _arr = self.open_image()
-        _fp = self.sdict['workspace']+'/jpg/'
+        _fp = self.workspace+'/jpg/'
         if not os.path.exists(_fp):
                     os.makedirs(_fp)
         _fp += str(self.att['basisname']) +'.jpg'
@@ -204,9 +195,9 @@ class Bild:
         
         """
         #load needed Settings
-        nullpunkt = int(self.sdict['nullpunkt'])
-        flammenmitte = int(self.sdict['flammenmitte'])
-        aufloesung = float(self.sdict['aufloesung'])
+        nullpunkt = int(self.zero)
+        flammenmitte = int(self.flame_center)
+        aufloesung = float(self.resolution)
         _arr = self.open_image()
         
         #nehme nur blauen farbkanal
@@ -238,9 +229,9 @@ class Bild:
         
         """
         #load needed Settings
-        nullpunkt = int(self.sdict['nullpunkt'])
-        flammenmitte = int(self.sdict['flammenmitte'])
-        aufloesung = float(self.sdict['aufloesung'])
+        nullpunkt = int(self.zero)
+        flammenmitte = int(self.flame_center)
+        aufloesung = float(self.resolution)
         _arr = self.open_image()
         
         #nehme nur blauen farbkanal
@@ -269,7 +260,7 @@ class Bild:
         m = [_guessMax]*2 #da nur ein gaus nur ein eintrag
         s = [10]*n
         
-        _fp = self.sdict['workspace']+'/flammenHoeheGauss/'
+        _fp = self.workspace+'/flammenHoeheGauss/'
         if not os.path.exists(_fp):
             os.makedirs(_fp)
         _fp += str(self.att['basisname'])
@@ -291,7 +282,7 @@ class Bild:
         roi (np.array): horizontale roi des bildes
         """
         while True:
-            flammenmitte = int(self.sdict['flammenmitte'])
+            flammenmitte = int(self.flame_center)
             
             index, roi = work_q.get()
             guessleft = np.argmax(roi[:flammenmitte])
@@ -323,7 +314,7 @@ class Bild:
             
         """
         _arr = self.open_image()
-        nullpunkt = int(self.sdict['nullpunkt'])
+        nullpunkt = int(self.zero)
         
         if 'flammenhoeheIndex' in self.att.keys():
             flammenhoehe = self.att['flammenhoeheIndex']
@@ -408,7 +399,7 @@ class Bild:
         """ Calculate the flame area
         
         """
-        aufloesung = float(self.sdict['aufloesung'])
+        aufloesung = float(self.resolution)
         
         _tarea = self.calc_flammenbreite()
         _tarea = np.array(_tarea)
@@ -426,7 +417,7 @@ class Bild:
         """ Calculate flame area (simple)
         
         """
-        aufloesung = float(self.sdict['aufloesung'])
+        aufloesung = float(self.resolution)
         aufloesung = (1./aufloesung)**2
         _arr = self.open_image()
         _arr = _arr.flat
