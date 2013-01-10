@@ -26,6 +26,7 @@ import math
 import multiprocessing as mp
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import scipy.ndimage as spimg
 
 #related third party imports
 import numpy as np # NumPy (multidimensional arrays, linear algebra, ...)
@@ -136,6 +137,8 @@ class Bild:
                 return self.image
             else:
                 _arr, _header = self.rnio.read_fits_nparray(self.pfad)
+                #drehen wenn notwendig. muss aus kalibrierung kommen!
+                _arr = spimg.interpolation.rotate(_arr, -0.95, order = 5, reshape=False)
                 #wenn fits image, behalte datei im arbeitsspeicher  
                 self.image = _arr
                 #plt.imshow(self.image)
@@ -177,6 +180,23 @@ class Bild:
                     os.makedirs(_fp)
         _fp += str(self.att['basisname']) +'.jpg'
         import scipy.misc
+        #rotieren weil bild sonst auf dem kopf steht
+        _arr = spimg.interpolation.rotate(_arr, 180, order = 5, reshape=False)
+        scipy.misc.imsave(_fp, _arr)
+        
+        
+    def convert_to_tiff(self):
+        """ Convert and save the image as jpg
+        
+        """
+        _arr = self.open_image()
+        _fp = self.workspace+'/tif/'
+        if not os.path.exists(_fp):
+                    os.makedirs(_fp)
+        _fp += str(self.att['basisname']) +'.tif'
+        import scipy.misc
+        #rotieren weil bild sonst auf dem kopf steht
+        _arr = spimg.interpolation.rotate(_arr, 180, order = 5, reshape=False)
         scipy.misc.imsave(_fp, _arr)
         
     def calc_totalInt(self):
@@ -215,12 +235,13 @@ class Bild:
             logging.error('Flammenmitte nicht innerhalb des Bildes')
 
         #calculation
-        #roi = arr[:,flammenmitte-breite:flammenmitte+breite]
-        #roi = roi.sum(axis=1)
-        _roi = _arr[:,flammenmitte]
+        breite = 1
+        _roi = _arr[:,flammenmitte-breite:flammenmitte+breite]
+        _roi = _roi.sum(axis=1) #wird zu 1D array
+        #_roi = _arr[:,flammenmitte]
         _posMax = np.argmax(_roi)
         #print _posMax
-        self.att['flammenhoehe'] = (nullpunkt - _posMax) / aufloesung
+        self.att['flammenhoehe'] = (_posMax - nullpunkt) / aufloesung
         self.att['flammenhoeheIndex'] = _posMax
 
         
@@ -248,16 +269,19 @@ class Bild:
             #print 'flammenmitte falsch'
             logging.error('Flammenmitte nicht innerhalb des Bildes')
         #Calculations
-        _roi = _arr[:,flammenmitte]
+        breite = 1
+        _roi = _arr[:,flammenmitte-breite:flammenmitte+breite]
+        _roi = _roi.sum(axis=1) #wird zu 1D array
+        #_roi = _arr[:,flammenmitte]
         _guessMax = np.argmax(_roi)        
         # fitting process
         y = _roi
         _max = len(y)-1
         x = np.linspace(0,_max, len(y))
         n = nGauss #1 gauss
-        b = 1
+        b = np.argmin(_roi)
         a = [50]*n
-        m = [_guessMax]*2 #da nur ein gaus nur ein eintrag
+        m = [_guessMax]*n #wenn nur ein gaus nur ein eintrag
         s = [10]*n
         
         _fp = self.workspace+'/flammenHoeheGauss/'
@@ -271,7 +295,8 @@ class Bild:
         #defining flame attributes
         m.sort()
         for i in xrange(nGauss):    
-            self.att['flammenhoeheGauss'+str(i)] = (nullpunkt - m[i]) / aufloesung
+            self.att['flammenhoeheGauss'+str(i)] = (m[i] - nullpunkt) / aufloesung
+            self.att['flammenhoeheGaussAmplitude'+str(i)] = a[i] #amplitude
             self.att['flammenhoeheGaussIndex'+str(i)] = m[i] #_posMax
             self.att['flammenhoeheGaussVarianz'+str(i)] = s[i] / aufloesung
         
@@ -431,5 +456,4 @@ class Bild:
         _c = _c * aufloesung
         self.att['flammenflaeche'] = _c
         return _c
-        
         

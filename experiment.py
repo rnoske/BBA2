@@ -159,11 +159,13 @@ class Experiment():
         """ Save all acquired Data
         
         """
-        _fp = self.att['path']+'/Calculated Data/'
-        if not os.path.exists(_fp):
-            os.makedirs(_fp)
+        print 'Saving calculated results!'
         if len(self.data) != 0:
             for key, value in self.data.iteritems():
+                _fp = self.att['path']+'/Calculated Data/'
+                if not os.path.exists(_fp):
+                    os.makedirs(_fp)
+                #print key, value
                 _fp += key
                 #save as text file
                 _fpd = _fp + '.txt'
@@ -176,15 +178,17 @@ class Experiment():
                 plt.legend()
                 _fpp = _fp + '.jpg'
                 plt.savefig(_fpp)
+        print 'Finished calculating results!'
         
     def convert_jpg(self):
         """ convert every image to jpg and save it
         
         """
-        print 'Convertiere Bilder zu jpgs'
+        print 'Convertiere Bilder zu jpgs und tiffs'
         for bild in self.bd.itervalues():
             bild.convert_to_jpg()
-        self.data['convertet_to_jpg'] = True
+            bild.convert_to_tiff()
+        #self.data['convertet_to_jpg'] = True
         print 'Convertierung abgeschlossen!'
         
         
@@ -196,8 +200,8 @@ class Experiment():
         _mInt = []
         for bild in self.bd.itervalues():
             bild.calc_totalInt()
-            _tInt.append([int(bild.att['bid']), float(bild.att['totalInt'])])
-            _mInt.append([int(bild.att['bid']), float(bild.att['mittelInt'])])
+            _tInt.append([int(bild.att['phase']), float(bild.att['totalInt'])])
+            _mInt.append([int(bild.att['phase']), float(bild.att['mittelInt'])])
         self.data['totalInt'] = np.array(_tInt)
         self.data['mittelInt'] = np.array(_mInt)
         
@@ -211,8 +215,8 @@ class Experiment():
         for i, bild in enumerate(self.bd.itervalues()):
             bild.calc_flammenhoehe()
             bild.calc_flammenhoeheGauss(nGauss)
-            _fH.append([int(bild.att['bid']), float(bild.att['flammenhoehe'])])
-            _fHG.append([int(bild.att['bid']), 
+            _fH.append([int(bild.att['phase']), float(bild.att['flammenhoehe'])])
+            _fHG.append([int(bild.att['phase']), 
                          float(bild.att['flammenhoeheGauss0'])])
             if nGauss == 2:
                 _fHG[i].append(float(bild.att['flammenhoeheGauss1']))
