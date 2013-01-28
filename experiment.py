@@ -178,16 +178,18 @@ class Experiment():
                 plt.legend()
                 _fpp = _fp + '.jpg'
                 plt.savefig(_fpp)
-        print 'Finished calculating results!'
+        print 'Finished saving calculated results!'
         
     def convert_jpg(self):
         """ convert every image to jpg and save it
         
         """
-        print 'Convertiere Bilder zu jpgs und tiffs'
+        print 'Convertiere Bilder zu jpgs, tif und eps'
         for bild in self.bd.itervalues():
             bild.convert_to_jpg()
             bild.convert_to_tiff()
+            #bild.convert_to_eps()
+            bild.convert_to_pdf()
         #self.data['convertet_to_jpg'] = True
         print 'Convertierung abgeschlossen!'
         
@@ -198,12 +200,28 @@ class Experiment():
         """
         _tInt = []
         _mInt = []
+        _com =  []
         for bild in self.bd.itervalues():
             bild.calc_totalInt()
+            bild.calc_com()
             _tInt.append([int(bild.att['phase']), float(bild.att['totalInt'])])
             _mInt.append([int(bild.att['phase']), float(bild.att['mittelInt'])])
+            _com.append([int(bild.att['phase']), float(bild.att['CoM 1']), float(bild.att['CoM 0'])])
         self.data['totalInt'] = np.array(_tInt)
         self.data['mittelInt'] = np.array(_mInt)
+        self.data['CoM'] = np.array(_com)
+        
+        #temporary calc-histogram call
+        #self.calc_histogram()
+        
+    def calc_histogram(self):
+        """ Calculate the Intensity histogram for every image
+        
+        """
+        print 'Calculating Histogram for all images'
+        for bild in self.bd.itervalues():
+            bild.calc_histogram()
+        print 'Finished calculating histograms'
         
     def calc_flameHeight(self, nGauss = 2):
         """ Calculate flame height for every image
@@ -211,18 +229,29 @@ class Experiment():
         """
         print 'Startet calculating flame height'
         _fH = []
-        _fHG = []
+        _fHG0 = []
+        _fHG1 = []
         for i, bild in enumerate(self.bd.itervalues()):
             bild.calc_flammenhoehe()
             bild.calc_flammenhoeheGauss(nGauss)
-            _fH.append([int(bild.att['phase']), float(bild.att['flammenhoehe'])])
-            _fHG.append([int(bild.att['phase']), 
-                         float(bild.att['flammenhoeheGauss0'])])
+            _fH.append([int(bild.att['phase']), 
+                        float(bild.att['flammenhoehe']), 
+                        float(bild.att['flammenhoeheIndex'])])
+            _fHG0.append([int(bild.att['phase']), 
+                         float(bild.att['flammenhoeheGauss0']),
+                         float(bild.att['flammenhoeheGaussAmplitude0']), 
+                        float(bild.att['flammenhoeheGaussVarianz0']), 
+                        float(bild.att['flammenhoeheGaussIndex0'])])
             if nGauss == 2:
-                _fHG[i].append(float(bild.att['flammenhoeheGauss1']))
-                        #float(bild.att['flammenhoeheGaussVarianz'])])
+                _fHG1.append([int(bild.att['phase']), 
+                         float(bild.att['flammenhoeheGauss1']),
+                         float(bild.att['flammenhoeheGaussAmplitude1']), 
+                        float(bild.att['flammenhoeheGaussVarianz1']), 
+                        float(bild.att['flammenhoeheGaussIndex1'])])
         self.data['flammenhoehe'] = np.array(_fH)
-        self.data['flammenhoehe Gauss'] = np.array(_fHG)
+        self.data['flammenhoehe Gauss 0'] = np.array(_fHG0)
+        if nGauss == 2:
+            self.data['flammenhoehe Gauss 1'] = np.array(_fHG1)
         print 'finished calculating flame height'
         
         

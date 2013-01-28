@@ -121,6 +121,9 @@ class Bild:
             self.att['phase'] = float(_tmp) * float(self.degree_image)
         except (TypeError):
             print 'Phase im Dateinamen nicht erkannt!'
+        except (ValueError):
+            print 'Dateiname seltsam: ' + str(_tmp)
+            self.att['phase'] = 0
         
     def open_image(self):
         """ Opens and returns an PIL image
@@ -138,7 +141,7 @@ class Bild:
             else:
                 _arr, _header = self.rnio.read_fits_nparray(self.pfad)
                 #drehen wenn notwendig. muss aus kalibrierung kommen!
-                _arr = spimg.interpolation.rotate(_arr, -0.95, order = 5, reshape=False)
+                _arr = spimg.interpolation.rotate(_arr, -0.9, order = 5, reshape=False)
                 #wenn fits image, behalte datei im arbeitsspeicher  
                 self.image = _arr
                 #plt.imshow(self.image)
@@ -176,13 +179,19 @@ class Bild:
         """
         _arr = self.open_image()
         _fp = self.workspace+'/jpg/'
+        _fpo = self.workspace+'/jpg-original/'
         if not os.path.exists(_fp):
-                    os.makedirs(_fp)
+            os.makedirs(_fp)
+        if not os.path.exists(_fpo):
+            os.makedirs(_fpo)
+        _fpo += str(self.att['basisname']) +'.jpg'
         _fp += str(self.att['basisname']) +'.jpg'
         import scipy.misc
+        scipy.misc.imsave(_fpo, _arr)
         #rotieren weil bild sonst auf dem kopf steht
         _arr = spimg.interpolation.rotate(_arr, 180, order = 5, reshape=False)
         scipy.misc.imsave(_fp, _arr)
+        
         
         
     def convert_to_tiff(self):
@@ -199,6 +208,35 @@ class Bild:
         _arr = spimg.interpolation.rotate(_arr, 180, order = 5, reshape=False)
         scipy.misc.imsave(_fp, _arr)
         
+    def convert_to_eps(self):
+        """ Convert and save the image as eps
+        
+        """
+        _arr = self.open_image()
+        _fp = self.workspace+'/eps/'
+        if not os.path.exists(_fp):
+                    os.makedirs(_fp)
+        _fp += str(self.att['basisname']) +'.eps'
+        import scipy.misc
+        #rotieren weil bild sonst auf dem kopf steht
+        _arr = spimg.interpolation.rotate(_arr, 180, order = 5, reshape=False)
+        scipy.misc.imsave(_fp, _arr)
+        
+    def convert_to_pdf(self):
+        """ Convert and save the image as pdf
+        
+        """
+        _arr = self.open_image()
+        _fp = self.workspace+'/pdf/'
+        if not os.path.exists(_fp):
+                    os.makedirs(_fp)
+        _fp += str(self.att['basisname']) +'.pdf'
+        import scipy.misc
+        #rotieren weil bild sonst auf dem kopf steht
+        _arr = spimg.interpolation.rotate(_arr, 180, order = 5, reshape=False)
+        scipy.misc.imsave(_fp, _arr)
+        
+        
     def calc_totalInt(self):
         """ Calculate total Pixel count of image
         
@@ -209,6 +247,45 @@ class Bild:
         breite = _arr.shape[1]
         _apx = breite * hoehe
         self.att['mittelInt'] = self.att['totalInt'] / _apx
+        
+        
+    def calc_histogram(self):
+        """ Calculate a Intensity histogram of the image
+        
+        """
+        _arr = self.open_image()
+        hist, bins = np.histogram(_arr, bins=100, range=(0, 50000))
+        self.att['bin_edges'] = bins
+        self.att['histogram'] = hist
+        
+        plt.cla()
+        plt.hist(_arr, bins=100)
+        #plt.show()
+        _fp = self.workspace+'/histogram/'
+        if not os.path.exists(_fp):
+            os.makedirs(_fp)
+        _fpp = _fp + str(self.att['basisname']) +'.eps'
+        plt.savefig(_fpp)
+        #save as text file
+        _fpd = _fp + str(self.att['basisname']) + '.txt'
+        np.savetxt(_fpd, hist, delimiter=';')
+        
+    def calc_com(self):
+        """ Calculate the center of mass of the image
+        
+        """
+        _arr = self.open_image()
+        
+        import scipy.ndimage.filters as spfilter
+        _arr = spfilter.median_filter(_arr, size = (5,5))
+        _arr = _arr - _arr.min()
+        
+        from scipy import ndimage
+        _com = ndimage.measurements.center_of_mass(_arr)
+        self.att['CoM 1'] = _com[1]
+        self.att['CoM 0'] = _com[0]
+        print str(self.att['basisname']) + ' Center of Mass is: ' + str(_com)
+
         
     def calc_flammenhoehe(self):
         """ Calculate flame height for image
@@ -456,4 +533,3 @@ class Bild:
         _c = _c * aufloesung
         self.att['flammenflaeche'] = _c
         return _c
-        
